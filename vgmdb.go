@@ -29,7 +29,8 @@ type Client struct {
 	UserAgent string
 
 	// Services used for talking to different parts of the VGMdb API.
-	Albums *AlbumsService
+	Albums   *AlbumsService
+	Products *ProductsService
 }
 
 // NewClient returns a new VGMdb API client.
@@ -62,6 +63,7 @@ func newClient(options ...ClientOptionFunc) (*Client, error) {
 
 	// Create all the public services.
 	c.Albums = &AlbumsService{client: c}
+	c.Products = &ProductsService{client: c}
 
 	return c, nil
 }

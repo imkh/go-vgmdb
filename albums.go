@@ -13,7 +13,7 @@ type AlbumsService struct {
 
 // Album represents a VGMdb album.
 //
-// VGMdb API schema: https://github.com/hufman/vgmdb/blob/9f00fcd437a9392fd3b8891b6d0a8cef9e0932ea/schema/album.json#L52
+// VGMdb API schema: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/schema/album.json#L52
 type Album struct {
 	Arrangers      []*NamedItem      `json:"arrangers"`
 	Barcode        string            `json:"barcode"`
@@ -54,7 +54,7 @@ type Album struct {
 
 // Track represents a track, with some translated names and a track length.
 //
-// VGMdb API schema: https://github.com/hufman/vgmdb/blob/9f00fcd437a9392fd3b8891b6d0a8cef9e0932ea/schema/album.json#L14
+// VGMdb API schema: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/schema/album.json#L14
 type Track struct {
 	Names       map[string]string `json:"names"`
 	TrackLength string            `json:"track_length"`
@@ -62,27 +62,27 @@ type Track struct {
 
 // Disc represents information about an audio disc.
 //
-// VGMdb API schema: https://github.com/hufman/vgmdb/blob/9f00fcd437a9392fd3b8891b6d0a8cef9e0932ea/schema/album.json#L24
+// VGMdb API schema: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/schema/album.json#L24
 type Disc struct {
 	DiscLength string   `json:"disc_length"`
 	Name       string   `json:"name"`
 	Tracks     []*Track `json:"tracks"`
 }
 
-// VGMdb API schema: https://github.com/hufman/vgmdb/blob/9f00fcd437a9392fd3b8891b6d0a8cef9e0932ea/schema/album.json#L38
+// VGMdb API schema: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/schema/album.json#L38
 type AlbumMeta struct {
 	Meta
 
-	Freedb int `json:"freedb"`
+	Freedb *int `json:"freedb,omitempty"`
 }
 
-// VGMdb API schema: https://github.com/hufman/vgmdb/blob/9f00fcd437a9392fd3b8891b6d0a8cef9e0932ea/schema/album.json#L84
+// VGMdb API schema: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/schema/album.json#L84
 type ReleasePrice struct {
 	Currency string      `json:"currency,omitempty"`
 	Price    interface{} `json:"price"`
 }
 
-// VGMdb API schema: https://github.com/hufman/vgmdb/blob/9f00fcd437a9392fd3b8891b6d0a8cef9e0932ea/schema/album.json#L99
+// VGMdb API schema: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/schema/album.json#L99
 type Stores struct {
 	Link string `json:"link"`
 	Name string `json:"name"`
@@ -90,7 +90,7 @@ type Stores struct {
 
 // GetAlbum gets a specific album, identified by album ID.
 //
-// VGMdb API docs: https://github.com/hufman/vgmdb/blob/9f00fcd437a9392fd3b8891b6d0a8cef9e0932ea/raml/api.raml#L140
+// VGMdb API docs: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/raml/api.raml#L140
 func (s *AlbumsService) GetAlbum(id int) (*Album, *http.Response, error) {
 	u := fmt.Sprintf("album/%d", id)
 

@@ -45,7 +45,7 @@ A Go library for accessing the VGMdb API (https://vgmdb.info/). Inspired by [go-
 - [ ] `/artist/<id>` - Artist information
 - [ ] `/org/<id>` - Organization information
 - [ ] `/event/<id>` - Event information
-- [ ] `/product/<id>` - Product information
+- [x] `/product/<id>` - Product information
 
 ### Seller Information
 
