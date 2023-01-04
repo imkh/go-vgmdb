@@ -3,6 +3,7 @@ package vgmdb
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 )
 
 // AlbumsService handles communication with the albums related methods
@@ -50,6 +51,30 @@ type Album struct {
 	VgmdbLink      string            `json:"vgmdb_link"`
 	Votes          int               `json:"votes"`
 	Websites       ItemWebsites      `json:"websites,omitempty"`
+}
+
+func (a *Album) findServiceUPC(service string) string {
+	// Example of matching strings:
+	// [service] releases have UPC [barcode].
+	// [service] release has UPC [barcode].
+	regex := `[^\.\n]+UPC (\d+)`
+	serviceRegexp := regexp.MustCompile(service + regex)
+
+	submatches := serviceRegexp.FindStringSubmatch(a.Notes)
+	if len(submatches) > 1 {
+		return submatches[1]
+	}
+	return ""
+}
+
+// ITunesUPC returns an iTunes UPC/Barcode if found in the album notes.
+func (a *Album) ITunesUPC() string {
+	return a.findServiceUPC("iTunes")
+}
+
+// SpotifyUPC returns a Spotify UPC/Barcode if found in the album notes.
+func (a *Album) SpotifyUPC() string {
+	return a.findServiceUPC("Spotify")
 }
 
 // Track represents a track, with some translated names and a track length.
