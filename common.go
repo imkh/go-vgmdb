@@ -93,11 +93,11 @@ type ReprintedAlbum struct {
 //
 // VGMdb API schema: https://github.com/hufman/vgmdb/blob/80a491cb2eae0dd8da2c9a81de4777a812e1bf10/schema/common.json#L162
 type Meta struct {
-	AddedDate   string `json:"added_date"`
-	EditedDate  string `json:"edited_date"`
-	FetchedDate string `json:"fetched_date,omitempty"`
-	Ttl         int    `json:"ttl"`
-	Visitors    int    `json:"visitors"`
+	AddedDate   DateTimeWithoutSeconds `json:"added_date"`
+	EditedDate  DateTimeWithoutSeconds `json:"edited_date"`
+	FetchedDate DateTimeWithoutSeconds `json:"fetched_date,omitempty"`
+	Ttl         int                    `json:"ttl"`
+	Visitors    int                    `json:"visitors"`
 }
 
 // AlbumArt represents various album art pictures.
