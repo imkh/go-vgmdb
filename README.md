@@ -78,7 +78,11 @@ import (
 )
 
 func main() {
-	client, err := vgmdb.NewClient()
+	// By default, created client uses public https://vgmdb.info.
+	client, err := vgmdb.NewClient(
+		// To use an another instance:
+		//vgmdb.WithBaseURL("https://vgmdb.example.com")
+	)
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
 	}
@@ -89,5 +93,12 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(album.Name)
+
+	// Get a product
+	product, _, err := client.Products.GetProduct(2)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(product.Name)
 }
 ```

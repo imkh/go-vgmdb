@@ -53,11 +53,11 @@ func (s *ProductsService) GetProduct(id int) (*Product, *http.Response, error) {
 		return nil, nil, err
 	}
 
-	a := new(Product)
-	resp, err := s.client.Do(req, a)
+	p := new(Product)
+	resp, err := s.client.Do(req, p)
 	if err != nil {
 		return nil, resp, err
 	}
 
-	return a, resp, err
+	return p, resp, err
 }

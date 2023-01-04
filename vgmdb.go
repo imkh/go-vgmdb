@@ -108,6 +108,11 @@ func (c *Client) NewRequest(method, path string) (*http.Request, error) {
 	u.RawPath = c.baseURL.Path + path
 	u.Path = c.baseURL.Path + unescaped
 
+	// Set format query string
+	q := u.Query()
+	q.Add("format", "json")
+	u.RawQuery = q.Encode()
+
 	// Create a request specific headers map.
 	reqHeaders := make(http.Header)
 	reqHeaders.Set("Accept", "application/json")
@@ -213,6 +218,8 @@ func CheckResponse(r *http.Response) error {
 //
 // </html>
 //
+// or:
+//
 // <html>
 // <head><title>502 Bad Gateway</title></head>
 // <body>
@@ -220,8 +227,6 @@ func CheckResponse(r *http.Response) error {
 // <hr><center>nginx/1.17.6</center>
 // </body>
 // </html>
-//
-//	}
 func parseError(data string) string {
 	errorHtmlTag := "pre"
 	errorHtmlTagOpen := fmt.Sprintf("<%s>", errorHtmlTag)
