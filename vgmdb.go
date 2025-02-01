@@ -19,6 +19,9 @@ const (
 type Scraper struct {
 	// Collector is Colly's main entity, it provides the scraper instance for a scraping job.
 	collector *colly.Collector
+
+	// Services used for scraping different parts of the VGMdb.net website.
+	Roles *RolesService
 }
 
 // NewScraper returns a new VGMdb.net scraper.
@@ -43,6 +46,9 @@ func NewScraper(options ...ScraperOptionFunc) (*Scraper, error) {
 	s.collector.OnError(func(r *colly.Response, err error) {
 		log.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
 	})
+
+	// Create all the public services.
+	s.Roles = &RolesService{scraper: s}
 
 	return s, nil
 }

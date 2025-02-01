@@ -2,6 +2,8 @@ package vgmdb
 
 import (
 	"net/http"
+
+	"github.com/gocolly/colly/v2"
 )
 
 // ScraperOptionFunc can be used to customize a new VGMdb scraper.
@@ -19,6 +21,16 @@ func WithUserAgent(userAgent string) ScraperOptionFunc {
 func WithHTTPTransport(transport *http.Transport) ScraperOptionFunc {
 	return func(s *Scraper) error {
 		s.collector.WithTransport(transport)
+		return nil
+	}
+}
+
+// WithCookie can be used to configure a custom cookie to send with each request.
+func WithCookie(cookie string) ScraperOptionFunc {
+	return func(s *Scraper) error {
+		s.collector.OnRequest(func(r *colly.Request) {
+			r.Headers.Set("Cookie", cookie)
+		})
 		return nil
 	}
 }

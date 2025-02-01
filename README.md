@@ -1,6 +1,6 @@
 # go-vgmdb
 
-A Go library for scraping VGMdb.net.
+A Go library for scraping [VGMdb.net](https://vgmdb.net/).
 
 ## Pages implemented
 
@@ -15,7 +15,7 @@ A Go library for scraping VGMdb.net.
 - [ ] `/org/<id>` - Organization page
 - [ ] `/product/<id>` - Product page
 - [ ] `/event/<id>` - Event page
-- [ ] `/role/<id>` - Role page
+- [x] `/role/<id>` - Role page - :warning: Requires authentication
 
 ### Browse
 
@@ -90,10 +90,17 @@ import (
 
 func main() {
 	scraper, err := vgmdb.NewScraper(
-		//vgmdb.WithUserAgent("custom-user-agent")
+		vgmdb.WithCookie("auth-cookie")
 	)
 	if err != nil {
 		log.Fatalf("Failed to create scraper: %v", err)
 	}
+
+	// Get a role
+	role, err := scraper.Roles.GetRole(34)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(role.Name)
 }
 ```
