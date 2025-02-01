@@ -59,13 +59,13 @@ A Go library for accessing the VGMdb API (https://vgmdb.info/). Inspired by [go-
 Inside your project directory, run:
 
 ```console
-$ go get github.com/imkg/go-vgmdb
+$ go get github.com/imkh/go-vgmdb
 ```
 
 or import the module and run `go get` without parameters.
 
 ```go
-import "github.com/imkg/go-vgmdb"
+import "github.com/imkh/go-vgmdb"
 ```
 
 ## Usage
@@ -74,11 +74,11 @@ import "github.com/imkg/go-vgmdb"
 package main
 
 import (
-	"github.com/imkg/go-vgmdb"
+	"github.com/imkh/go-vgmdb"
 )
 
 func main() {
-	// By default, created client uses public https://vgmdb.info.
+	// By default, created client uses public https://vgmdb.info
 	client, err := vgmdb.NewClient(
 		// To use an another instance:
 		//vgmdb.WithBaseURL("https://vgmdb.example.com")
