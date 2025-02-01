@@ -73,7 +73,10 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 			}
 		}
 
-		role.Notes = e.ChildText(`#rightfloat > div[style="background-color: #2F364F;"] > div.smallfont`)
+		notes := e.ChildText(`#rightfloat > div[style="background-color: #2F364F;"] > div.smallfont`)
+		if notes != "No notes available." {
+			role.Notes = notes
+		}
 	})
 
 	// Visit the page
