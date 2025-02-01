@@ -85,6 +85,9 @@ import "github.com/imkh/go-vgmdb"
 package main
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/imkh/go-vgmdb"
 )
 
