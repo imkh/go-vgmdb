@@ -1,58 +1,69 @@
 # go-vgmdb
 
-A Go library for accessing the VGMdb API (https://vgmdb.info/). Inspired by [go-gitlab](https://github.com/xanzy/go-gitlab).
+A Go library for scraping VGMdb.net.
 
-## Coverage
+## Pages implemented
 
-### Searching
+### Home
 
-- [ ] `/search/<query>` - Search for matching items
-- [ ] `/search?q=<query>` - Search for matching items
-- [ ] `/search/albums/<query>` - Search for matching albums
-- [ ] `/search/albums?q=<query>` - Search for matching albums
-- [ ] `/search/artists/<query>` - Search for matching artists
-- [ ] `/search/artists?q=<query>` - Search for matching artists
-- [ ] `/search/orgs/<query>` - Search for matching organizations
-- [ ] `/search/orgs?q=<query>` - Search for matching organizations
-- [ ] `/search/products/<query>` - Search for matching products
-- [ ] `/search/products?q=<query>` - Search for matching products
+- [ ] `/` - Home page
 
-### Browse Lists
+### Resources
 
-- [ ] `/albumlist/<letter>` - View all of the albums by letter
-- [ ] `/artistlist/<letter>` - View all of the artists by letter
-- [ ] `/orglist` - View all of the organizations
-- [ ] `/orglist/<letter>` - View all of the organizations by letter
-- [ ] `/eventlist` - View all of the events
-- [ ] `/eventlist/<year>` - View all of the events by year
-- [ ] `/productlist/<letter>` - View all of the products by letter
+- [ ] `/album/<id>` - Album page
+- [ ] `/artist/<id>` - Artist page
+- [ ] `/org/<id>` - Organization page
+- [ ] `/product/<id>` - Product page
+- [ ] `/event/<id>` - Event page
+- [ ] `/role/<id>` - Role page
 
-### Recent Changes
+### Browse
 
-- [ ] `/recent/albums` - View recent album changes
-- [ ] `/recent/media` - View recent album media changes
-- [ ] `/recent/tracklists` - View recent album tracklist changes
-- [ ] `/recent/scans` - View recent album scanned covers
-- [ ] `/recent/artists` - View recent artist changes
-- [ ] `/recent/products` - View recent product changes
-- [ ] `/recent/labels` - View recent label organization changes
-- [ ] `/recent/links` - View recent album and artist links changes
-- [ ] `/recent/ratings` - View recent album rating changes
+- [ ] `/db/albums.php` - Browse all albums
+- [ ] `/db/artists.php` - Browse all artists
+- [ ] `/db/org.php` - Browse all organizations
+- [ ] `/db/product.php` - Browse all products
+- [ ] `/db/events.php` - Browse all events
+- [ ] `/db/role.php` - Browse all roles
 
-### Information Pages
+### Search
 
-- [x] `/album/<id>` - Album information
-- [ ] `/artist/<id>` - Artist information
-- [ ] `/org/<id>` - Organization information
-- [ ] `/event/<id>` - Event information
-- [x] `/product/<id>` - Product information
+- [ ] `/search?q=<query>` - Search for all resources
+- [ ] `/search?q=<query>&type=album` - Search for albums
+- [ ] `/search?q=<query>&type=artist` - Search for artists
+- [ ] `/search?q=<query>&type=org` - Search for organizations
+- [ ] `/search?q=<query>&type=product` - Search for products
 
-### Seller Information
+### User Lists
 
-- [ ] `/album/<id>/sellers` - Album sellers
-- [ ] `/artist/<id>/sellers` - Artist sellers
-- [ ] `/album/<id>/sellers?allow_partial=true` - Partial album sellers with Refresh header
-- [ ] `/artist/<id>/sellers?allow_partial=true` - Partial artist sellers with Refresh header
+- [ ] `/db/collection.php?do=view&userid=<id>` - Collection
+- [ ] `/db/marketplace.php?do=saleview&userid=<id>` - Sale List
+- [ ] `/db/marketplace.php?do=wishview&userid=<id>` - Wish List
+- [ ] `/db/user.php?do=submissions&id=<id>` - Submissions
+- [ ] `/db/ratings.php?do=view&userid=<id>` - Ratings
+- [ ] `/db/draft.php?do=view&userid=<id>` - Drafts
+
+### Recent Updates
+
+- [ ] `/db/recent.php?do=view_albums` - View recent album updates
+- [ ] `/db/recent.php?do=view_media` - View recent media updates
+- [ ] `/db/recent.php?do=view_tracklists` - View recent tracklist updates
+- [ ] `/db/recent.php?do=view_scans` - View recent scan updates
+- [ ] `/db/recent.php?do=view_artists` - View recent artist updates
+- [ ] `/db/recent.php?do=view_credits` - View recent credits updates
+- [ ] `/db/recent.php?do=view_drafts` - View recent draft updates
+- [ ] `/db/recent.php?do=view_products` - View recent product updates
+- [ ] `/db/recent.php?do=view_labels` - View recent organization updates
+- [ ] `/db/recent.php?do=view_links` - View recent link updates
+- [ ] `/db/recent.php?do=view_ratings` - View recent rating updates
+
+### Other
+
+- [ ] `/db/calendar.php?type=<resource>&year=2025&month=2` - Calendar
+- [ ] `/db/marketplace.php?do=view` - Marketplace
+- [ ] `/db/modq.php` - Album Moderation Queue
+- [ ] `/db/modq.php?do=mod_artists` - Artist Moderation Queue
+- [ ] `/db/statistics.php` - Site Statistics
 
 ## Installation
 
@@ -78,27 +89,11 @@ import (
 )
 
 func main() {
-	// By default, created client uses public https://vgmdb.info
-	client, err := vgmdb.NewClient(
-		// To use an another instance:
-		//vgmdb.WithBaseURL("https://vgmdb.example.com")
+	scraper, err := vgmdb.NewScraper(
+		//vgmdb.WithUserAgent("custom-user-agent")
 	)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Fatalf("Failed to create scraper: %v", err)
 	}
-
-	// Get an album
-	album, _, err := client.Albums.GetAlbum(75832)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(album.Name)
-
-	// Get a product
-	product, _, err := client.Products.GetProduct(2)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(product.Name)
 }
 ```
