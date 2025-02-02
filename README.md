@@ -43,6 +43,10 @@ A Go library for scraping [VGMdb.net](https://vgmdb.net/).
 - [ ] `/db/ratings.php?do=view&userid=<id>` - Ratings
 - [ ] `/db/draft.php?do=view&userid=<id>` - Drafts
 
+### Forum
+
+- [ ] `/forums/member.php?u=<id>` - User Profile page
+
 ### Recent Updates
 
 - [ ] `/db/recent.php?do=view_albums` - View recent album updates
