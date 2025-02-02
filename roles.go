@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/gocolly/colly/v2"
@@ -23,12 +24,19 @@ type RolesService struct {
 
 // Role represents a role entry on VGMdb.
 type Role struct {
-	ID      int      `json:"id"`
-	Name    string   `json:"name"`
-	Aliases []string `json:"aliases"`
-	Notes   string   `json:"notes"`
-	URL     string   `json:"url"`
-	Image   *Image   `json:"image"`
+	ID      int          `json:"id"`
+	Name    string       `json:"name"`
+	Aliases []*RoleAlias `json:"aliases"`
+	Notes   string       `json:"notes"`
+	Image   *Image       `json:"image"`
+	URL     string       `json:"url"`
+}
+
+// RoleAlias represents a role's alias.
+type RoleAlias struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }
 
 // Image represents a role's image.
@@ -64,10 +72,24 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 
 	// Handle the main content
 	s.scraper.collector.OnHTML("#innermain", func(e *colly.HTMLElement) {
+		// Parse the role's name
 		role.Name = e.ChildText(fmt.Sprintf(`a[href="%s?alias=0"]`, urlPath))
 
-		role.Aliases = e.ChildTexts(fmt.Sprintf(`#leftfloat a[href^="%s?alias="]`, urlPath))
+		// Parse the role's aliases
+		e.ForEach(fmt.Sprintf(`#leftfloat a[href^="%s?alias="]`, urlPath), func(_ int, e *colly.HTMLElement) {
+			roleAlias := &RoleAlias{
+				Name: e.Text,
+			}
+			if aliasURL, err := url.Parse(baseURL + e.Attr("href")); err == nil {
+				roleAlias.URL = aliasURL.String()
+				if aliasID, err := strconv.Atoi(aliasURL.Query().Get("alias")); err == nil {
+					roleAlias.ID = aliasID
+				}
+			}
+			role.Aliases = append(role.Aliases, roleAlias)
+		})
 
+		// Parse the role's image
 		if thumbURL := e.ChildAttr(`#leftfloat img[src*="thumb-media.vgm.io"]`, "src"); thumbURL != "" {
 			role.Image = &Image{
 				ThumbURL: thumbURL,
@@ -76,6 +98,7 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 			}
 		}
 
+		// Parse the role's notes
 		notes := e.ChildText(`#rightfloat > div[style="background-color: #2F364F;"] > div.smallfont`)
 		if notes != "No notes available." {
 			role.Notes = notes
