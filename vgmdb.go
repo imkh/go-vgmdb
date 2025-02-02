@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	// Base URL of the VGMdb.net website. Make sure to NOT end with a slash.
+	// Base URL of the VGMdb.net website.
 	baseURL = "https://vgmdb.net"
 
 	// Default user agent to use for the scraper.

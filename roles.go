@@ -3,6 +3,7 @@ package vgmdb
 import (
 	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/gocolly/colly/v2"
@@ -39,13 +40,15 @@ type Image struct {
 
 // GetRole retrieves a role by its ID.
 //
-// Scraped page: https://vgmdb.net/role/<id>
+// Scraped page: https://vgmdb.net/role/:id
 func (s *RolesService) GetRole(id int) (*Role, error) {
+	urlPath := fmt.Sprintf("/role/%d", id)
+
 	var vgmdbError error
-	role := &Role{
-		ID:  id,
-		URL: fmt.Sprintf("%s/role/%d", baseURL, id),
-	}
+	role := new(Role)
+
+	role.ID = id
+	role.URL, _ = url.JoinPath(baseURL, urlPath)
 
 	// Check for error page
 	s.scraper.collector.OnHTML(`table[cellpadding="0"][cellspacing="0"]:has(img[src="/db/img/banner-error.gif"])`, func(e *colly.HTMLElement) {
@@ -61,9 +64,9 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 
 	// Handle the main content
 	s.scraper.collector.OnHTML("#innermain", func(e *colly.HTMLElement) {
-		role.Name = e.ChildText(fmt.Sprintf(`a[href="/role/%d?alias=0"]`, id))
+		role.Name = e.ChildText(fmt.Sprintf(`a[href="%s?alias=0"]`, urlPath))
 
-		role.Aliases = e.ChildTexts(fmt.Sprintf(`#leftfloat a[href^="/role/%d?alias="]`, id))
+		role.Aliases = e.ChildTexts(fmt.Sprintf(`#leftfloat a[href^="%s?alias="]`, urlPath))
 
 		if thumbURL := e.ChildAttr(`#leftfloat img[src*="thumb-media.vgm.io"]`, "src"); thumbURL != "" {
 			role.Image = &Image{
