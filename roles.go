@@ -27,7 +27,7 @@ type Role struct {
 	ID      int          `json:"id"`
 	Name    string       `json:"name"`
 	Aliases []*RoleAlias `json:"aliases"`
-	Notes   string       `json:"notes"`
+	Notes   *string      `json:"notes"`
 	Image   *Image       `json:"image"`
 	URL     string       `json:"url"`
 }
@@ -101,7 +101,7 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 		// Parse the role's notes
 		notes := e.ChildText(`#rightfloat > div[style="background-color: #2F364F;"] > div.smallfont`)
 		if notes != "No notes available." {
-			role.Notes = notes
+			role.Notes = &notes
 		}
 	})
 
