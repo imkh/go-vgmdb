@@ -48,7 +48,7 @@ type Image struct {
 
 // GetRole retrieves a role by its ID.
 //
-// Scraped page: https://vgmdb.net/role/:id
+// Scraped page: https://vgmdb.net/role/{id}
 func (s *RolesService) GetRole(id int) (*Role, error) {
 	urlPath := fmt.Sprintf("/role/%d", id)
 

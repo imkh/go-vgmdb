@@ -2,7 +2,7 @@
 
 A Go library for scraping [VGMdb.net](https://vgmdb.net/).
 
-## Pages implemented
+## Pages covered
 
 ### Home
 
@@ -10,12 +10,12 @@ A Go library for scraping [VGMdb.net](https://vgmdb.net/).
 
 ### Resources
 
-- [ ] `/album/<id>` - Album page
-- [ ] `/artist/<id>` - Artist page
-- [ ] `/org/<id>` - Organization page
-- [ ] `/product/<id>` - Product page
-- [ ] `/event/<id>` - Event page
-- [x] `/role/<id>` - Role page - :warning: Requires authentication
+- [ ] `/album/{id}` - Album page
+- [ ] `/artist/{id}` - Artist page
+- [ ] `/org/{id}` - Organization page
+- [ ] `/product/{id}` - Product page
+- [ ] `/event/{id}` - Event page
+- [x] `/role/{id}` - Role page - :warning: Requires authentication
 
 ### Browse
 
@@ -28,24 +28,24 @@ A Go library for scraping [VGMdb.net](https://vgmdb.net/).
 
 ### Search
 
-- [ ] `/search?q=<query>` - Search for all resources
-- [ ] `/search?q=<query>&type=album` - Search for albums
-- [ ] `/search?q=<query>&type=artist` - Search for artists
-- [ ] `/search?q=<query>&type=org` - Search for organizations
-- [ ] `/search?q=<query>&type=product` - Search for products
+- [ ] `/search?q={query}` - Search for all resources
+- [ ] `/search?q={query}&type=album` - Search for albums
+- [ ] `/search?q={query}&type=artist` - Search for artists
+- [ ] `/search?q={query}&type=org` - Search for organizations
+- [ ] `/search?q={query}&type=product` - Search for products
 
 ### User Lists
 
-- [ ] `/db/collection.php?do=view&userid=<id>` - Collection
-- [ ] `/db/marketplace.php?do=saleview&userid=<id>` - Sale List
-- [ ] `/db/marketplace.php?do=wishview&userid=<id>` - Wish List
-- [ ] `/db/user.php?do=submissions&id=<id>` - Submissions
-- [ ] `/db/ratings.php?do=view&userid=<id>` - Ratings
-- [ ] `/db/draft.php?do=view&userid=<id>` - Drafts
+- [ ] `/db/collection.php?do=view&userid={id}` - Collection
+- [ ] `/db/marketplace.php?do=saleview&userid={id}` - Sale List
+- [ ] `/db/marketplace.php?do=wishview&userid={id}` - Wish List
+- [ ] `/db/user.php?do=submissions&id={id}` - Submissions
+- [ ] `/db/ratings.php?do=view&userid={id}` - Ratings
+- [ ] `/db/draft.php?do=view&userid={id}` - Drafts
 
 ### Forum
 
-- [ ] `/forums/member.php?u=<id>` - User Profile page
+- [ ] `/forums/member.php?u={id}` - User Profile page
 
 ### Recent Updates
 
@@ -63,7 +63,7 @@ A Go library for scraping [VGMdb.net](https://vgmdb.net/).
 
 ### Other
 
-- [ ] `/db/calendar.php?type=<resource>&year=2025&month=2` - Calendar
+- [ ] `/db/calendar.php?type={resource}&year=2025&month=2` - Calendar
 - [ ] `/db/marketplace.php?do=view` - Marketplace
 - [ ] `/db/modq.php` - Album Moderation Queue
 - [ ] `/db/modq.php?do=mod_artists` - Artist Moderation Queue
