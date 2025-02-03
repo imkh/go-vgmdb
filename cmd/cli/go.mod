@@ -1,4 +1,4 @@
-module vgmdb
+module go-vgmdb/cli
 
 go 1.23.5
 
