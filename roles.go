@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -41,9 +43,10 @@ type RoleAlias struct {
 
 // Image represents a role's image.
 type Image struct {
-	ThumbURL string `json:"thumbUrl"`
-	FullURL  string `json:"fullUrl"`
-	Caption  string `json:"caption"`
+	ThumbURL    string     `json:"thumb_url"`
+	FullURL     string     `json:"full_url"`
+	SubmittedBy *string    `json:"submitted_by"`
+	SubmittedAt *time.Time `json:"submitted_at"`
 }
 
 // GetRole retrieves a role by its ID.
@@ -91,11 +94,23 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 		})
 
 		// Parse the role's image
-		if thumbURL := e.ChildAttr(`#leftfloat img[src*="thumb-media.vgm.io"]`, "src"); thumbURL != "" {
+		if thumbURL := e.ChildAttr(`#leftfloat img[src^="https://thumb-media.vgm.io"]`, "src"); thumbURL != "" {
 			role.Image = &Image{
 				ThumbURL: thumbURL,
-				FullURL:  e.ChildAttr(`#leftfloat a[href*="media.vgm.io"]`, "href"),
-				Caption:  e.ChildText("#leftfloat div.highslide-caption"),
+				FullURL:  e.ChildAttr(`#leftfloat a[href^="https://media.vgm.io"]`, "href"),
+			}
+			if caption := e.ChildText("#leftfloat div.highslide-caption"); caption != "" {
+				// Extract submission author & timestamp from caption
+				if matches := regexp.MustCompile(`Submitted by (.+) on (.+)`).FindStringSubmatch(caption); len(matches) == 3 {
+					// Parse the submission author
+					submittedBy := matches[1]
+					role.Image.SubmittedBy = &submittedBy
+
+					// Parse the submission timestamp
+					if submittedAt, err := time.Parse("Jan 2, 2006 03:04 PM", matches[2]); err == nil {
+						role.Image.SubmittedAt = &submittedAt
+					}
+				}
 			}
 		}
 
