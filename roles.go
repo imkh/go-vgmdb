@@ -56,6 +56,7 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 	role := new(Role)
 
 	role.ID = id
+	role.Aliases = []*RoleAlias{}
 	role.URL, _ = url.JoinPath(baseURL, urlPath)
 
 	// Check for error page
