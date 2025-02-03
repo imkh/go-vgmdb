@@ -111,5 +111,8 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 		return nil, fmt.Errorf("unable to visit role page: %w", err)
 	}
 
-	return role, vgmdbError
+	if vgmdbError != nil {
+		return nil, vgmdbError
+	}
+	return role, nil
 }
