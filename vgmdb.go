@@ -13,6 +13,9 @@ const (
 
 	// Default user agent to use for the scraper.
 	userAgent = "go-vgmdb"
+
+	// Date format used by the VGMdb.net website.
+	dateFormat = "Jan 2, 2006 03:04 PM"
 )
 
 // Scraper represents a scraper for the VGMdb.net website.

@@ -31,6 +31,7 @@ type Role struct {
 	Aliases []*RoleAlias `json:"aliases"`
 	Notes   *string      `json:"notes"`
 	Image   *Image       `json:"image"`
+	Meta    *Meta        `json:"meta"`
 	URL     string       `json:"url"`
 }
 
@@ -47,6 +48,20 @@ type Image struct {
 	FullURL     string     `json:"full_url"`
 	SubmittedBy *string    `json:"submitted_by"`
 	SubmittedAt *time.Time `json:"submitted_at"`
+}
+
+type Meta struct {
+	AddedBy     *User      `json:"added_by"`
+	AddedAt     *time.Time `json:"added_at"`
+	EditedBy    *User      `json:"edited_by"`
+	EditedAt    *time.Time `json:"edited_at"`
+	PageBuiltIn string     `json:"page_built_in"`
+}
+
+type User struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	URL      string `json:"url"`
 }
 
 // GetRole retrieves a role by its ID.
@@ -107,7 +122,7 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 					role.Image.SubmittedBy = &submittedBy
 
 					// Parse the submission timestamp
-					if submittedAt, err := time.Parse("Jan 2, 2006 03:04 PM", matches[2]); err == nil {
+					if submittedAt, err := time.Parse(dateFormat, matches[2]); err == nil {
 						role.Image.SubmittedAt = &submittedAt
 					}
 				}
@@ -121,6 +136,32 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 		}
 	})
 
+	// Parse right sidebar of the page
+	s.scraper.collector.OnHTML(`#rightcolumn`, func(e *colly.HTMLElement) {
+		e.ForEach(`div.smallfont > div[style="padding: 6px 10px 6px 10px"] > div`, func(_ int, e *colly.HTMLElement) {
+			if role.Meta == nil {
+				role.Meta = &Meta{}
+			}
+
+			divText := strings.TrimSpace(e.Text)
+			divTextSplit := strings.Split(divText, "\n")
+			if len(divTextSplit) != 2 {
+				return
+			}
+			label := strings.TrimSpace(divTextSplit[0])
+			value := strings.TrimSpace(divTextSplit[1])
+
+			switch {
+			case strings.HasPrefix(label, "Added by"):
+				role.Meta.AddedBy, role.Meta.AddedAt = parseMetaUserAndTimestamp(e, value)
+			case strings.HasPrefix(label, "Edited by"):
+				role.Meta.EditedBy, role.Meta.EditedAt = parseMetaUserAndTimestamp(e, value)
+			case strings.HasPrefix(label, "Page built in"):
+				role.Meta.PageBuiltIn = value
+			}
+		})
+	})
+
 	// Visit the page
 	err := s.scraper.collector.Visit(role.URL)
 	if err != nil {
@@ -131,4 +172,23 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 		return nil, vgmdbError
 	}
 	return role, nil
+}
+
+func parseMetaUserAndTimestamp(e *colly.HTMLElement, datetime string) (*User, *time.Time) {
+	user := &User{
+		Username: e.ChildText("a"),
+	}
+	if userURL, err := url.Parse(baseURL + e.ChildAttr(`a[href^="/forums/member.php?u="]`, "href")); err == nil {
+		user.URL = userURL.String()
+		if userID, err := strconv.Atoi(userURL.Query().Get("u")); err == nil {
+			user.ID = userID
+		}
+	}
+
+	timestamp, err := time.Parse(dateFormat, datetime)
+	if err != nil {
+		return user, nil
+	}
+
+	return user, &timestamp
 }
