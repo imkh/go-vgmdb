@@ -26,13 +26,13 @@ type RolesService struct {
 
 // Role represents a role entry on VGMdb.
 type Role struct {
-	ID      int          `json:"id"`
-	Name    string       `json:"name"`
-	Aliases []*RoleAlias `json:"aliases"`
-	Notes   *string      `json:"notes"`
-	Image   *Image       `json:"image"`
-	Meta    *Meta        `json:"meta"`
-	URL     string       `json:"url"`
+	ID        int          `json:"id"`
+	Name      string       `json:"name"`
+	Aliases   []*RoleAlias `json:"aliases"`
+	NotesHTML *string      `json:"notes_html"`
+	Image     *Image       `json:"image"`
+	Meta      *Meta        `json:"meta"`
+	URL       string       `json:"url"`
 }
 
 // RoleAlias represents a role's alias.
@@ -130,9 +130,9 @@ func (s *RolesService) GetRole(id int) (*Role, error) {
 		}
 
 		// Parse the role's notes
-		notes := e.ChildText(`#rightfloat > div[style="background-color: #2F364F;"] > div.smallfont`)
-		if notes != "No notes available." {
-			role.Notes = &notes
+		notes, err := e.DOM.Find(`#rightfloat > div[style="background-color: #2F364F;"] > div.smallfont`).Html()
+		if err == nil && notes != `<span class="smallfont label"><i>No notes available.</i></span>` {
+			role.NotesHTML = &notes
 		}
 	})
 
